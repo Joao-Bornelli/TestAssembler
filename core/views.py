@@ -76,8 +76,7 @@ def home_view(request):
         
         if sum(1 for alt in jsonData['Alternativas'] if alt.get('gabarito')==True) != 1:
             return render(request, 'home.html', {'error': 'Deve haver ao menos uma alternativa marcada como gabarito (True).'})
-            
-    lala123
+        #teste     
         return render(request, 'home.html', {'success': 'Arquivo processado com sucesso!', 'data': jsonData})
         
     
