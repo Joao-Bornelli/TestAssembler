@@ -48,7 +48,7 @@ def signup_view(request):
 
 @login_required
 def home_view(request):
-    fields = {'Contexto','Comando','Alternativas','Justificativa do Gabarito','Justificativa dos Distratores','Informações Essenciais'}
+    fields = {'Contexto','Comando','Alternativas','Justificativa do Gabarito','Justificativas dos Distratores','Informações Essenciais'}
     error = []
 
     if request.method == 'POST':
@@ -90,9 +90,11 @@ def home_view(request):
 
             else:
                 for idx, question in enumerate(jsonData, start=1):
-                    print(f"questão>>>> {question} - {idx}")
                     # Verifica campos obrigatórios
                     missing = fields - question.keys()
+                    print(f"questão {idx}>>>> {question}")
+                    print(missing)
+
                     for field in missing:
                         error.append(f'Campo obrigatório "{field}" ausente na questão {idx}.')
 
@@ -106,12 +108,12 @@ def home_view(request):
                         error.append(f'A questão {idx} deve conter no máximo 4 alternativas.')
 
                     for alt in alts:
-                        if alt.get('texto', '').strip() == '':
+                        if alt.get('Texto', '').strip() == '':
                             error.append(f'A questão {idx} contém alternativa vazia.')
-                        if alt.get('gabarito') not in [True, False]:
+                        if alt.get('Gabarito') not in [True, False]:
                             error.append(f'O gabarito da questão {idx} deve ser True ou False.')
 
-                    if sum(1 for alt in alts if alt.get('gabarito') is True) != 1:
+                    if sum(1 for alt in alts if alt.get('Gabarito') is True) != 1:
                         error.append(f'A questão {idx} deve ter exatamente 1 gabarito.')
 
         except Exception:
