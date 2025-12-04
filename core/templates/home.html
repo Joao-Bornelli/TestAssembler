@@ -77,6 +77,21 @@
             <button type="submit" class="btn btn-primary">Enviar</button>
           </div>
         </form>
+
+        {% if download_ready %}
+        <div class="alert alert-info mt-4">
+            <h5 class="mb-3">Arquivos gerados:</h5>
+
+            <a href="{% url 'download_main_test' %}" class="btn btn-primary mb-2" download>
+                Baixar Prova Oficial
+            </a>
+            <a href="{% url 'download_answer_test' %}" class="btn btn-secondary mb-2" download>
+                Baixar Prova com Gabarito
+            </a>
+        </div>
+        {% endif %}
+
+
         {% if error %}
         <div class="alert alert-danger mt-3">
           <ul class="mb-0">

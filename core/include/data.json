@@ -1,0 +1,111 @@
+[
+  {
+    "Contexto": "Uma empresa de logística deseja monitorar a frota de caminhões em tempo real, coletando dados de geolocalização e estado do motor em áreas remotas onde não há cobertura de sinal de celular (4G/5G) ou Wi-Fi. O projeto exige uma tecnologia de comunicação de longo alcance e baixo consumo de energia (LPWAN) para enviar pequenos pacotes de dados periodicamente.",
+    "Comando": "Selecione o padrão de comunicação sem fio mais adequado para atender aos requisitos de longa distância e baixo consumo energético descritos no cenário.",
+    "Alternativas": [
+      {
+        "texto": "LoRaWAN",
+        "gabarito": true
+      },
+      {
+        "texto": "Bluetooth",
+        "gabarito": false
+      },
+      {
+        "texto": "NFC (Near Field Communication)",
+        "gabarito": false
+      },
+      {
+        "texto": "Ethernet",
+        "gabarito": false
+      }
+    ],
+    "Justificativa do Gabarito": "LoRaWAN é uma tecnologia de rede de longa distância e baixa potência (LPWAN) projetada especificamente para conectar dispositivos IoT a quilômetros de distância com bateria de longa duração.",
+    "Justificativa dos Distratores": {
+      "Bluetooth": "O estudante pode considerar apenas o aspecto de 'sem fio' e 'baixo consumo', ignorando que o alcance do Bluetooth é curto (metros) e inadequado para áreas remotas.",
+      "NFC (Near Field Communication)": "O estudante pode confundir tecnologias sem fio, escolhendo uma de curtíssimo alcance (centímetros), usada para pagamentos e tags, inviável para monitoramento remoto.",
+      "Ethernet": "O estudante pode optar pela conexão cabeada padrão por ser robusta, desconsiderando a inviabilidade física de cabear caminhões em movimento."
+    },
+    "Informações Essenciais": {
+      "Curso técnico avaliado": "Técnico em Desenvolvimento de Sistemas",
+      "Capacidade avaliada": "Integrar dispositivos de comunicação de dados",
+      "Nível de dificuldade do item": "Médio",
+      "Objetos de conhecimento relacionados ao item": "14 - Conectividade de hardware e software",
+      "Competências dos estudantes que serão avaliadas pelo item": "Reconhecer especificações técnicas de protocolos de comunicação sem fio",
+      "Níveis cognitivos avaliados": "ANALISAR"
+    }
+  },
+  {
+    "Contexto": "Em um sistema de automação industrial, diversos sensores operam com protocolos distintos (como ZigBee e Modbus). Para que os dados coletados por esses sensores cheguem a uma plataforma em nuvem padronizada, é necessário um equipamento intermediário capaz de traduzir esses diferentes protocolos e encaminhar as informações para a rede externa.",
+    "Comando": "Identifique o dispositivo de hardware responsável por intermediar a comunicação entre os sensores locais e a nuvem, realizando a tradução de protocolos.",
+    "Alternativas": [
+      {
+        "texto": "Gateway IoT",
+        "gabarito": true
+      },
+      {
+        "texto": "Repetidor de Sinal",
+        "gabarito": false
+      },
+      {
+        "texto": "Protoboard",
+        "gabarito": false
+      },
+      {
+        "texto": "Multímetro",
+        "gabarito": false
+      }
+    ],
+    "Justificativa do Gabarito": "O Gateway IoT atua como uma ponte, conectando dispositivos de diferentes padrões (borda) à internet ou servidores centrais, normalizando e encaminhando o tráfego de dados.",
+    "Justificativa dos Distratores": {
+      "Repetidor de Sinal": "O estudante pode confundir a função de amplificar um sinal físico com a função lógica de traduzir protocolos de comunicação.",
+      "Protoboard": "O estudante pode associar ferramentas de prototipagem física usadas no desenvolvimento com o equipamento final de infraestrutura de rede.",
+      "Multímetro": "O estudante pode confundir um instrumento de medição elétrica com um dispositivo ativo de rede.",
+      "Contexto": "O estudante pode focar apenas na amplificação do sinal."
+    },
+    "Informações Essenciais": {
+      "Curso técnico avaliado": "Técnico em Desenvolvimento de Sistemas",
+      "Capacidade avaliada": "Integrar dispositivos de comunicação de dados",
+      "Nível de dificuldade do item": "Fácil",
+      "Objetos de conhecimento relacionados ao item": "23 - Integração de sistemas",
+      "Competências dos estudantes que serão avaliadas pelo item": "Identificar componentes de arquitetura de redes IoT",
+      "Níveis cognitivos avaliados": "ENTENDER"
+    }
+  },
+  {
+    "Contexto": "Um desenvolvedor está programando um microcontrolador para ler a temperatura ambiente. O sensor utilizado fornece uma variação contínua de tensão elétrica proporcional à temperatura (sinal analógico), mas o processador trabalha apenas com valores binários (sinal digital). Para processar essa informação, é necessário utilizar um recurso interno do microcontrolador que transforme a tensão em um número inteiro.",
+    "Comando": "Determine o periférico interno do microcontrolador que deve ser configurado para realizar a leitura correta deste sensor.",
+    "Alternativas": [
+      {
+        "texto": "Conversor Analógico-Digital (ADC)",
+        "gabarito": true
+      },
+      {
+        "texto": "Modulação por Largura de Pulso (PWM)",
+        "gabarito": false
+      },
+      {
+        "texto": "General Purpose Input/Output (GPIO) Digital",
+        "gabarito": false
+      },
+      {
+        "texto": "Watchdog Timer",
+        "gabarito": false
+      }
+    ],
+    "Justificativa do Gabarito": "O ADC (Analog-to-Digital Converter) é o circuito responsável por amostrar um sinal de tensão contínua e quantificá-lo em um valor digital binário que a CPU pode processar.",
+    "Justificativa dos Distratores": {
+      "Modulação por Largura de Pulso (PWM)": "O estudante pode confundir o periférico de entrada (leitura) com uma técnica de saída usada para simular sinais analógicos (controle de potência).",
+      "General Purpose Input/Output (GPIO) Digital": "O estudante pode acreditar erroneamente que uma porta puramente digital (que lê apenas 0 ou 1) consegue interpretar a variação gradativa de um sensor analógico.",
+      "Watchdog Timer": "O estudante pode selecionar aleatoriamente um termo técnico relacionado a microcontroladores, desconhecendo que sua função é reiniciar o sistema em caso de travamento."
+    },
+    "Informações Essenciais": {
+      "Curso técnico avaliado": "Técnico em Desenvolvimento de Sistemas",
+      "Capacidade avaliada": "Integrar projetos orientados ao sensoriamento e controle",
+      "Nível de dificuldade do item": "Difícil",
+      "Objetos de conhecimento relacionados ao item": "16 - Microcontroladores",
+      "Competências dos estudantes que serão avaliadas pelo item": "Aplicar técnicas de leitura de sinais analógicos em sistemas embarcados",
+      "Níveis cognitivos avaliados": "APLICAR"
+    }
+  }
+]

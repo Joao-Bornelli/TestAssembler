@@ -6,13 +6,16 @@ from docx.enum.table import WD_ALIGN_VERTICAL
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
+from io import BytesIO
+
 import json
 
 def generate_docx(fillData, questionsData):
-    doc = Document()
-    style = doc.styles['Normal']
+    
+    mainDoc = Document()
+    style = mainDoc.styles['Normal']
     style.font.name = 'Arial'
-    sections = doc.sections[0]
+    sections = mainDoc.sections[0]
     sections.top_margin = Cm(1.0)
     sections.bottom_margin = Cm(1.0)
     sections.left_margin = Cm(1.0)
@@ -21,7 +24,7 @@ def generate_docx(fillData, questionsData):
     # ====
     #   Tabela de cabeçalho
     # ====
-    table = doc.add_table(rows=7,cols=3)
+    table = mainDoc.add_table(rows=7,cols=3)
     table.alignment = WD_ALIGN_PARAGRAPH.CENTER
     table.style = "Table Grid"
     table.autofit = False
@@ -46,7 +49,7 @@ def generate_docx(fillData, questionsData):
     left_column_image.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     left_column_run_img = left_column_image.add_run()
-    left_column_run_img.add_picture("include/LogoSenai.png",width=Inches(1.5))
+    left_column_run_img.add_picture("core/include/LogoSenai.png",width=Inches(1.5))
 
     left_column_text = left_column_cell.add_paragraph()
     left_column_text.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -93,14 +96,9 @@ def generate_docx(fillData, questionsData):
             fillData['Instructor'],     #Docente   
             fillData['Course'],         #Curso
             fillData['Course_Unit'],    #Unidade Curricular
-            fillData['Class'],          #Turma
+            '',                         #Turma
             '']                         #Estudante
 
-    
-    # ====
-    #   Gera as tabelas com as questoes
-    # ====
-    
     for i, key in enumerate(data.keys()):
         cell = data[key]                            # mantém a célula original
         cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
@@ -108,20 +106,22 @@ def generate_docx(fillData, questionsData):
         p = cell.paragraphs[0]                      # usa o parágrafo existente
         r = p.add_run(labels[i] + values[i])        # adiciona texto
         r.bold = True
-
-
-    spacer = doc.add_paragraph()
+        
+    tmp = BytesIO()
+    mainDoc.save(tmp)
+    tmp.seek(0)
+    answersDoc = Document(tmp)
+    
+    # ====
+    #   Gera as tabelas na prova oficial com as questoes
+    # ====
+    
+    spacer = mainDoc.add_paragraph()
     spacer.paragraph_format.space_after = Pt(12)
     
-    try:
-        with open('include/data.json', 'r')as file:
-            jsonData = json.load(file)
-    except Exception as e:
-        print("Erro ao carregar o arquivo JSON:", e)
-
-    for i, question in enumerate(jsonData):
+    for i, question in enumerate(questionsData):
         
-        question_table = doc.add_table(rows=3,cols=1)
+        question_table = mainDoc.add_table(rows=3,cols=1)
         question_table.alignment = WD_ALIGN_PARAGRAPH.CENTER
         question_table.style = "Table Grid"
         question_table.autofit = True
@@ -164,10 +164,98 @@ def generate_docx(fillData, questionsData):
                     p.paragraph_format.keep_together = True
                     p.paragraph_format.keep_with_next = True
         
-        spacer = doc.add_paragraph()
+        spacer = mainDoc.add_paragraph()
+        spacer.paragraph_format.space_after = Pt(12)
+    
+    
+    # ====
+    #  Gera as tabelas na prova com gabaritos e justificativas
+    # ====
+    
+    spacer = answersDoc.add_paragraph()
+    spacer.paragraph_format.space_after = Pt(12)
+    
+    for i, question in enumerate(questionsData):
+        
+        question_table = answersDoc.add_table(rows=3,cols=1)
+        question_table.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        question_table.style = "Table Grid"
+        question_table.autofit = True
+        question_table.columns[0].width = Inches(7.5)        
+        
+        item_cell = question_table.cell(0,0)
+        item_cell.text = ""                    
+        item_row = item_cell.paragraphs[0]
+        
+        item_row.add_run(f"ITEM {i+1}")
+        set_cell_background(item_cell,'00418a')
+        
+        hability_cell = question_table.cell(1,0)
+        hability_cell.text = ""
+        hability_row = hability_cell.paragraphs[0]
+        hability_row.add_run("Habilidade: ").bold = True
+        hability_row.add_run(question['Informações Essenciais']['Capacidade avaliada']).bold = False
+        
+        context_command_cell = question_table.cell(2,0)
+        context_command_cell.text = ""
+        context_paragraph = context_command_cell.paragraphs[0]
+        context_paragraph.add_run("Contexto: ").bold = True
+        context_paragraph.add_run(question['Contexto']).bold = False
+        
+        command_paragraph = context_command_cell.add_paragraph()
+        command_paragraph.add_run("\nComando: ").bold = True
+        command_paragraph.add_run(question['Comando']).bold = False
+        
+        alternatives_paragraph = context_command_cell.add_paragraph()
+        alternatives_paragraph.add_run("\nAlternativas:").bold = True
+        for j, alternative in enumerate(question['Alternativas']):
+            alternatives_paragraph.add_run(f'\n{chr(65+j)}. ').bold = True
+            if alternative.get('gabarito'):
+                alternatives_paragraph.add_run(alternative['texto']).bold = True
+            else:
+                alternatives_paragraph.add_run(alternative['texto']).bold = False
+        
+        
+        justification_paragraph = context_command_cell.add_paragraph()
+        justification_paragraph.add_run("\nJustificativa do Gabarito: ").bold = True
+        justification_paragraph.add_run(question['Justificativa do Gabarito']).bold = False
+        
+        distractor_paragraph = context_command_cell.add_paragraph()
+        distractor_paragraph.add_run(f"\nJustificativa dos Distratores: ").bold = True
+        for alternative, justification in question['Justificativa dos Distratores'].items():
+            distractor_paragraph.add_run(f'\n{alternative}: ').bold = True
+            distractor_paragraph.add_run(f'{justification}').bold = False
+            
+        for row in question_table.rows:
+            for cell in row.cells:
+                for p in cell.paragraphs:
+                    p.paragraph_format.space_after = Pt(2)
+                    p.paragraph_format.space_before = Pt(2)
+                    p.paragraph_format.keep_together = True
+                    p.paragraph_format.keep_with_next = True
+        
+        spacer = answersDoc.add_paragraph()
         spacer.paragraph_format.space_after = Pt(12)
         
-    doc.save("arquivo.docx")
+    main_buffer = BytesIO()
+    mainDoc.save(main_buffer)
+    main_buffer.seek(0)
+
+    # salva prova com gabarito
+    answers_buffer = BytesIO()
+    answersDoc.save(answers_buffer)
+    answers_buffer.seek(0)
+    
+
+    return main_buffer, answers_buffer
+        
+    
+    
+    
+    
+    
+    return buffer
+    #doc.save("arquivo.docx")
     
 def set_cell_background(cell, color):
     tc = cell._tc
