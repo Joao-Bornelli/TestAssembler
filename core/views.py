@@ -81,6 +81,7 @@ def home_view(request):
         try:
             jsonData = json.load(receivedFile)   # Arquivo inteiro carregado
             print("jsonData >>>>", jsonData)
+            print("jsonData[0] >>>>", jsonData[0])
             if not isinstance(jsonData, list):
                 error.append('O arquivo deve ser uma lista de questões em formato JSON.')
 
