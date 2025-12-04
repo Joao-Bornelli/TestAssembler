@@ -91,10 +91,14 @@ def home_view(request):
             else:
                 for idx, question in enumerate(jsonData, start=1):
                     # Verifica campos obrigatórios
+
                     missing = fields - question.keys()
-                    print(f"questão {idx}>>>> {question}")
-                    print(missing)
                     
+                    
+                    print(f"questão {idx}>>>> {question}")
+                    print(f'keys>>>{question.keys()}')
+                    print(f'missing>>>{missing}')
+
                     for field in missing:
                         error.append(f'Campo obrigatório "{field}" ausente na questão {idx}.')
 
